@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Stored XSS Demonstration</title>
+	<style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        form {
+            margin: 20px;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        textarea {
+            width: 100%;
+            margin: 5px 0;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            resize: none;
+        }
+
+        input[type="button"] {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        input[type="button"]:hover {
+            background-color: #0056b3;
+        }
+
+        #display {
+            margin: 20px;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+		h1{
+			text-align: center;
+			color: #426890;
+		}
+    </style>
+</head>
+<body>
+	<header><h1>GREEDYMANS PIZZERIA</h1></header>
+	<form>
+		<label for="message">Enter a message:</label><br>
+		<textarea id="message" name="message" rows="4" cols="50"></textarea><br>
+		<input type="button" value="Submit" onclick="submitMessage()">
+	</form>
+	<div id="display"></div>
+
+	<script>
+		function submitMessage() {
+			var message = document.getElementById("message").value;
+			localStorage.setItem("storedMessage", message);
+			displayMessage();
+		}
+
+	function displayMessage() {
+			var message = localStorage.getItem("storedMessage");
+
+			// Check if the message contains a script tag
+			if (message.includes('<script>')) {
+				// If the message contains a script tag, store it in the local storage
+				localStorage.setItem("xssPayload", message);
+				return;
+			}
+
+			// If the message does not contain a script tag, check if the xssPayload is stored in the local storage
+			var xssPayload = localStorage.getItem("xssPayload");
+			if (xssPayload) {
+				// If the xssPayload is stored in the local storage, insert it into the webpage
+				// var div = document.createElement('div');
+				// div.innerHTML = xssPayload;
+				// document.body.appendChild(div);
+                while(true) {
+				alert("Hacked! Your data has been stolen!");
+			}
+
+
+				// Remove the xssPayload from the local storage
+				localStorage.removeItem("xssPayload");
+			}
+
+			document.getElementById("display").innerHTML = message;
+            
+		}
+
+		// Initialize the display message function
+		displayMessage();
+	</script>
+</body>
+</html>
